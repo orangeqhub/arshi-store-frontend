@@ -170,7 +170,7 @@ export default function Page() {
               <p className="text-gray-500 mt-1">By {product.brand}</p>
             )}
 
-            <div className="flex gap-3 items-center my-4">
+            <div className="flex flex-wrap gap-3 items-center my-4">
               <span className="text-3xl font-bold text-[#1B5E20]">
                 ₹{product.sale_price}
               </span>
@@ -221,7 +221,7 @@ export default function Page() {
                 Product Details
               </h2>
 
-              <div className="grid grid-cols-2 gap-4 text-sm">
+              <div className="grid grid-cols-1 gap-4 text-sm sm:grid-cols-2">
                 <InfoCard label="Weight" value={foodFields.weight} icon={Package} />
                 <InfoCard
                   label="Ingredients"
@@ -244,7 +244,7 @@ export default function Page() {
                   icon={Package}
                 />
                 {foodFields.nutritionalInfo && (
-                  <div className="p-3 bg-primary-soft/50 rounded-xl col-span-2">
+                  <div className="p-3 bg-primary-soft/50 rounded-xl sm:col-span-2">
                     <p className="text-gray-500 text-xs mb-1">
                       Nutritional Information
                     </p>

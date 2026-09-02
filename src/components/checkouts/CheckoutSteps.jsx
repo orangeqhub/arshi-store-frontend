@@ -13,7 +13,7 @@ export default function CheckoutSteps({
   ];
 
   return (
-    <div className="mb-8 flex items-center justify-center gap-8">
+    <div className="mb-8 flex flex-wrap items-center justify-center gap-4 sm:gap-8">
       {steps.map(
         (step, index) => (
           <div

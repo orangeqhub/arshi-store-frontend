@@ -25,14 +25,8 @@ const playfair = Playfair_Display({
   variable: "--font-playfair",
 });
 
-export const metadata = {
-  title: "Arshi Naturals | Pure. Authentic. Homemade with Love.",
-  description:
-    "Premium homemade pickles, snacks, sweets and natural foods crafted with traditional recipes. Delivered fresh to your doorstep.",
-  icons: {
-    icon: "/arshi-logo.svg",
-  },
-};
+const API_BASE_URL =
+  process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api/v1";
 
 export const viewport = {
   width: "device-width",
@@ -42,12 +36,37 @@ export const viewport = {
   userScalable: "no",
 };
 
-export default function RootLayout({ children }) {
+export default async function RootLayout({ children }) {
+  let title = "Arshi Naturals | Pure. Authentic. Homemade with Love.";
+  let description =
+    "Premium homemade pickles, snacks, sweets and natural foods crafted with traditional recipes. Delivered fresh to your doorstep.";
+  let favicon = "/logo.jpeg";
+
+  try {
+    const response = await fetch(`${API_BASE_URL}/store/cms/site-meta`, {
+      cache: "no-store",
+    });
+    if (response.ok) {
+      const body = await response.json();
+      const meta = body?.data || {};
+      if (meta.title) title = meta.title;
+      if (meta.description) description = meta.description;
+      if (meta.favicon) favicon = meta.favicon;
+    }
+  } catch {
+    // fall back to defaults
+  }
+
   return (
     <html
       lang="en"
       className={`${notoSans.variable} ${playfair.variable} h-full antialiased`}
     >
+      <head>
+        <title>{title}</title>
+        <meta name="description" content={description} />
+        <link rel="icon" href={favicon} />
+      </head>
       <body className="min-h-full flex flex-col font-sans">
         <ReduxProvider>
           <AuthInitializer />

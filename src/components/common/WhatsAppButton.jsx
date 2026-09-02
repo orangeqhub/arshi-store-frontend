@@ -1,15 +1,22 @@
 "use client";
 
 import { FaWhatsapp } from "react-icons/fa";
-
-const WHATSAPP_NUMBER = "919885161899";
-const WHATSAPP_MESSAGE =
-  "Hi Arshi Naturals, I would like to know more about your products.";
+import { getWhatsAppSettings } from "@/services/cms.service";
+import useCmsSiteContent from "@/hooks/useCmsSiteContent";
 
 export default function WhatsAppButton() {
-  const href = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(
-    WHATSAPP_MESSAGE
-  )}`;
+  const { data } = useCmsSiteContent(getWhatsAppSettings);
+  const settings = data || {};
+
+  const enabled = settings.enabled !== false;
+  const number = settings.phone_number || "919885161899";
+  const message =
+    settings.message ||
+    "Hi Arshi Naturals, I would like to know more about your products.";
+
+  if (!enabled || !number) return null;
+
+  const href = `https://wa.me/${number}?text=${encodeURIComponent(message)}`;
 
   return (
     <a

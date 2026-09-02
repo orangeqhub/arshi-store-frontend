@@ -14,48 +14,68 @@ import Container from "@/components/ui/Container";
 import Text from "@/components/ui/Text";
 import Button from "@/components/ui/Button";
 import { useRouter } from "next/navigation";
+import { getAboutPageData } from "@/services/cms.service";
+import useCmsSiteContent from "@/hooks/useCmsSiteContent";
 
-const stats = [
-  { value: "15+", label: "Years of Tradition" },
-  { value: "10,000+", label: "Happy Customers" },
-  { value: "50+", label: "Homemade Products" },
-  { value: "100%", label: "Natural Ingredients" },
-];
+const DEFAULT_CONTENT = {
+  hero_title: "About Arshi Naturals",
+  hero_subtitle: "Pure. Authentic. Homemade with Love.",
+  hero_button_text: "Explore Our Products",
+  story_title: "Our Story",
+  story_paragraphs: [
+    "Arshi Naturals was born from a passion for preserving the authentic flavors of traditional Indian homemade foods.",
+    "Every jar of pickle, every batch of murukulu, and every sweet laddu is crafted with the same love and care.",
+    "From our kitchen in Guntur, Andhra Pradesh, we bring you the finest homemade pickles, snacks, sweets, powders and natural products.",
+  ],
+  image_url:
+    "https://images.unsplash.com/photo-1596797038530-2c107229654b?w=800&q=80",
+  stats: [
+    { value: "15+", label: "Years of Tradition" },
+    { value: "10,000+", label: "Happy Customers" },
+    { value: "50+", label: "Homemade Products" },
+    { value: "100%", label: "Natural Ingredients" },
+  ],
+  features_title: "Why Choose Us",
+  features: [
+    {
+      icon_name: "Leaf",
+      title: "100% Natural Ingredients",
+      description:
+        "Fresh, natural ingredients with no artificial preservatives or colors",
+    },
+    {
+      icon_name: "BadgeCheck",
+      title: "Traditional Recipes",
+      description: "Time-honored family recipes passed down through generations",
+    },
+    {
+      icon_name: "Zap",
+      title: "Freshly Prepared",
+      description:
+        "Small-batch preparation for maximum freshness and authentic taste",
+    },
+  ],
+  delivery_title: "Delivering Across India",
+  delivery_locations: ["Guntur", "Vijayawada", "Hyderabad", "Bangalore", "Chennai"],
+  phone: "+91 9885161899",
+  email: "info@arshinaturals.com",
+  address: "Guntur, Andhra Pradesh 522001, India",
+};
 
-const features = [
-  {
-    icon: Leaf,
-    title: "100% Natural Ingredients",
-    desc: "Fresh, natural ingredients with no artificial preservatives or colors",
-  },
-  {
-    icon: BadgeCheck,
-    title: "Traditional Recipes",
-    desc: "Time-honored family recipes passed down through generations",
-  },
-  {
-    icon: Zap,
-    title: "Freshly Prepared",
-    desc: "Small-batch preparation for maximum freshness and authentic taste",
-  },
-];
-
-const locations = [
-  "Guntur",
-  "Vijayawada",
-  "Hyderabad",
-  "Bangalore",
-  "Chennai",
-];
-
-const ABOUT_IMAGE =
-  "https://images.unsplash.com/photo-1596797038530-2c107229654b?w=800&q=80";
+const ICON_MAP = { Leaf, BadgeCheck, Zap, ShieldCheck };
 
 export default function AboutPage() {
   const router = useRouter();
+  const { data } = useCmsSiteContent(getAboutPageData);
+  const content = { ...DEFAULT_CONTENT, ...(data || {}) };
+
+  const stats = content.stats || DEFAULT_CONTENT.stats;
+  const features = content.features || DEFAULT_CONTENT.features;
+  const locations = content.delivery_locations || DEFAULT_CONTENT.delivery_locations;
+  const paragraphs = content.story_paragraphs || DEFAULT_CONTENT.story_paragraphs;
 
   const handlePrimaryCall = () => {
-    window.location.href = "tel:+919885161899";
+    router.push(`tel:${(content.phone || DEFAULT_CONTENT.phone).replace(/\s/g, "")}`);
   };
 
   return (
@@ -67,17 +87,17 @@ export default function AboutPage() {
             variant="h2"
             className="text-white font-[family-name:var(--font-playfair)]"
           >
-            About Arshi Naturals
+            {content.hero_title}
           </Text>
           <Text className="mt-3 text-white/90">
-            Pure. Authentic. Homemade with Love.
+            {content.hero_subtitle}
           </Text>
           <Button
             variant="success"
             className="mt-6 bg-[#D4AF37] text-[#1B5E20] hover:opacity-90"
             onClick={() => router.push("/products")}
           >
-            Explore Our Products →
+            {content.hero_button_text} →
           </Button>
         </Container>
       </section>
@@ -86,13 +106,20 @@ export default function AboutPage() {
         <Container>
           <div className="grid gap-10 lg:grid-cols-2 lg:items-center">
             <div className="relative h-[320px] overflow-hidden rounded-3xl md:h-[400px] premium-shadow-lg">
-              <Image
-                src={ABOUT_IMAGE}
-                alt="Homemade pickles and traditional foods"
-                fill
-                priority
-                className="object-cover"
-              />
+              {content.image_url ? (
+                <Image
+                  src={content.image_url}
+                  alt="Homemade pickles and traditional foods"
+                  fill
+                  priority
+                  className="object-cover"
+                  unoptimized={content.image_url.startsWith("http")}
+                />
+              ) : (
+                <div className="flex h-full items-center justify-center bg-primary-soft text-[#1B5E20]">
+                  <Leaf size={64} />
+                </div>
+              )}
             </div>
 
             <div>
@@ -100,30 +127,14 @@ export default function AboutPage() {
                 variant="h3"
                 className="text-[#1a2e1a] font-[family-name:var(--font-playfair)]"
               >
-                Our Story
+                {content.story_title || "Our Story"}
               </Text>
 
-              <Text className="mt-5">
-                Arshi Naturals was born from a passion for preserving the
-                authentic flavors of traditional Indian homemade foods. What
-                started as a family kitchen sharing pickles and snacks with
-                neighbors has grown into a beloved brand serving food lovers
-                across India.
-              </Text>
-
-              <Text className="mt-4">
-                Every jar of pickle, every batch of murukulu, and every sweet
-                laddu is crafted with the same love and care that our grandmothers
-                put into their cooking. We believe that food is not just
-                nourishment — it is memory, tradition, and love.
-              </Text>
-
-              <Text className="mt-4">
-                From our kitchen in Guntur, Andhra Pradesh, we bring you the
-                finest homemade pickles, snacks, sweets, powders and natural
-                products — all made with 100% natural ingredients and no
-                artificial preservatives.
-              </Text>
+              {paragraphs.map((para, i) => (
+                <Text key={i} className="mt-4">
+                  {para}
+                </Text>
+              ))}
 
               <div className="mt-6 space-y-3">
                 <div className="flex items-center gap-3">
@@ -132,22 +143,22 @@ export default function AboutPage() {
                     onClick={handlePrimaryCall}
                     className="text-left text-gray-700 hover:text-[#1B5E20]"
                   >
-                    +91 9885161899
+                    {content.phone || DEFAULT_CONTENT.phone}
                   </button>
                 </div>
                 <div className="flex items-center gap-3">
                   <Mail size={18} className="text-[#4CAF50]" />
                   <a
-                    href="mailto:info@arshinaturals.com"
+                    href={`mailto:${content.email || DEFAULT_CONTENT.email}`}
                     className="text-gray-700 hover:text-[#1B5E20]"
                   >
-                    info@arshinaturals.com
+                    {content.email || DEFAULT_CONTENT.email}
                   </a>
                 </div>
                 <div className="flex items-start gap-3">
                   <MapPin size={18} className="mt-1 text-[#4CAF50]" />
                   <span className="text-gray-700 leading-6">
-                    Guntur, Andhra Pradesh 522001, India
+                    {content.address || DEFAULT_CONTENT.address}
                   </span>
                 </div>
               </div>
@@ -177,27 +188,27 @@ export default function AboutPage() {
             variant="h3"
             className="mb-10 text-center text-[#1a2e1a] font-[family-name:var(--font-playfair)]"
           >
-            Why Choose Us
+            {content.features_title || "Why Choose Us"}
           </Text>
 
           <div className="grid gap-5 md:grid-cols-3">
-            {features.map((item) => (
-              <div
-                key={item.title}
-                className="rounded-2xl border bg-white p-6 text-center premium-shadow"
-              >
-                <item.icon
-                  size={38}
-                  className="mx-auto text-[#4CAF50]"
-                />
-                <Text variant="h6" className="mt-4 text-[#1a2e1a]">
-                  {item.title}
-                </Text>
-                <Text variant="bodySmall" className="mt-2">
-                  {item.desc}
-                </Text>
-              </div>
-            ))}
+            {features.map((item) => {
+              const Icon = ICON_MAP[item.icon_name] || Leaf;
+              return (
+                <div
+                  key={item.title}
+                  className="rounded-2xl border bg-white p-6 text-center premium-shadow"
+                >
+                  <Icon size={38} className="mx-auto text-[#4CAF50]" />
+                  <Text variant="h6" className="mt-4 text-[#1a2e1a]">
+                    {item.title}
+                  </Text>
+                  <Text variant="bodySmall" className="mt-2">
+                    {item.description}
+                  </Text>
+                </div>
+              );
+            })}
           </div>
         </Container>
       </section>
@@ -208,7 +219,7 @@ export default function AboutPage() {
             variant="h4"
             className="mb-8 text-center text-[#1a2e1a]"
           >
-            Delivering Across India
+            {content.delivery_title || "Delivering Across India"}
           </Text>
           <div className="flex flex-wrap justify-center gap-3">
             {locations.map((city) => (

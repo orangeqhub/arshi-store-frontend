@@ -20,7 +20,16 @@ import SearchBar from "@/components/common/SearchBar";
 import useCartCount from "@/hooks/useCartCountHeader";
 import useWishlistCount from "@/hooks/usewishlistcount";
 import useCategories from "@/hooks/useCategories";
+import { getFooterData } from "@/services/cms.service";
+import useCmsSiteContent from "@/hooks/useCmsSiteContent";
 import { setUser, clearUser } from "@/redux/userSlice";
+
+const DEFAULT_NAV = [
+  { label: "Home", href: "/" },
+  { label: "Shop", href: "/products" },
+  { label: "About Us", href: "/about" },
+  { label: "Contact Us", href: "/contact" },
+];
 
 export default function Header() {
   const dispatch = useDispatch();
@@ -37,6 +46,60 @@ export default function Header() {
   const { cartCount } = useCartCount();
   const { wishlistCount } = useWishlistCount();
   const { categories } = useCategories();
+  const { data: footerData } = useCmsSiteContent(getFooterData);
+
+  const navLinks =
+    footerData?.quick_links?.length
+      ? footerData.quick_links
+      : DEFAULT_NAV;
+
+  const renderNavItem = (item) => {
+    if (item.label.toLowerCase() === "categories") {
+      return (
+        <div className="relative" ref={dropdownRef}>
+          <button
+            type="button"
+            onClick={() => setCategoriesOpen(!categoriesOpen)}
+            className="flex items-center gap-1 font-medium text-[#1a2e1a] transition hover:text-[#4CAF50]"
+          >
+            Categories
+            <ChevronDown
+              size={16}
+              className={clsx(
+                "transition-transform",
+                categoriesOpen && "rotate-180"
+              )}
+            />
+          </button>
+
+          {categoriesOpen && (
+            <div className="absolute left-0 top-full z-50 mt-2 w-56 overflow-hidden rounded-xl border border-gray-100 bg-white py-2 shadow-xl">
+              <Link
+                href="/categories"
+                onClick={() => setCategoriesOpen(false)}
+                className="block border-b border-gray-100 px-4 py-2.5 text-sm font-semibold text-[#1B5E20] hover:bg-primary-soft"
+              >
+                All Categories
+              </Link>
+              {categories.map((cat) => (
+                <button
+                  key={cat.id}
+                  type="button"
+                  onClick={() => goCategory(cat)}
+                  className="flex w-full items-center gap-2 px-4 py-2.5 text-left text-sm text-gray-700 hover:bg-primary-soft hover:text-[#1B5E20]"
+                >
+                  <span>{cat.icon || "🌿"}</span>
+                  {cat.name}
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+      );
+    }
+
+    return <NavLink href={item.href}>{item.label}</NavLink>;
+  };
 
   useEffect(() => setMounted(true), []);
 
@@ -91,61 +154,21 @@ export default function Header() {
         <div className="hidden h-[72px] items-center gap-6 lg:flex">
           <Link href="/" className="shrink-0">
             <Image
-              src="/arshi-logo.svg"
+              src="/logo.jpeg"
               alt="Arshi Naturals"
               width={150}
               height={44}
-              className="h-10 w-auto"
+              className="h-10 w-auto object-contain"
               priority
             />
           </Link>
 
           <nav className="flex shrink-0 items-center gap-6">
-            <NavLink href="/">Home</NavLink>
-            <NavLink href="/products">Shop</NavLink>
-
-            <div className="relative" ref={dropdownRef}>
-              <button
-                type="button"
-                onClick={() => setCategoriesOpen(!categoriesOpen)}
-                className="flex items-center gap-1 font-medium text-[#1a2e1a] transition hover:text-[#4CAF50]"
-              >
-                Categories
-                <ChevronDown
-                  size={16}
-                  className={clsx(
-                    "transition-transform",
-                    categoriesOpen && "rotate-180"
-                  )}
-                />
-              </button>
-
-              {categoriesOpen && (
-                <div className="absolute left-0 top-full z-50 mt-2 w-56 overflow-hidden rounded-xl border border-gray-100 bg-white py-2 shadow-xl">
-                  <Link
-                    href="/categories"
-                    onClick={() => setCategoriesOpen(false)}
-                    className="block border-b border-gray-100 px-4 py-2.5 text-sm font-semibold text-[#1B5E20] hover:bg-primary-soft"
-                  >
-                    All Categories
-                  </Link>
-                  {categories.map((cat) => (
-                    <button
-                      key={cat.id}
-                      type="button"
-                      onClick={() => goCategory(cat)}
-                      className="flex w-full items-center gap-2 px-4 py-2.5 text-left text-sm text-gray-700 hover:bg-primary-soft hover:text-[#1B5E20]"
-                    >
-                      <span>{cat.icon || "🌿"}</span>
-                      {cat.name}
-                    </button>
-                  ))}
-                </div>
-              )}
-            </div>
-
-            <NavLink href="/about">About Us</NavLink>
-            <NavLink href="/contact">Contact Us</NavLink>
+            {navLinks.map((item) => (
+              <div key={item.href || item.label}>
+                {renderNavItem(item)}
+              </div>
+            ))}
           </nav>
 
           <div className="ml-auto flex min-w-0 flex-1 items-center justify-end gap-3">
@@ -199,11 +222,11 @@ export default function Header() {
         <div className="flex h-14 items-center justify-between gap-2 lg:hidden">
           <Link href="/">
             <Image
-              src="/arshi-logo.svg"
+              src="/logo.jpeg"
               alt="Arshi Naturals"
               width={120}
               height={36}
-              className="h-8 w-auto"
+              className="h-8 w-auto object-contain"
               priority
             />
           </Link>
@@ -248,15 +271,9 @@ export default function Header() {
 
             <SearchBar compact />
 
-            {[
-              { href: "/", label: "Home" },
-              { href: "/products", label: "Shop" },
-              { href: "/categories", label: "Categories" },
-              { href: "/about", label: "About Us" },
-              { href: "/contact", label: "Contact Us" },
-            ].map((item) => (
+            {navLinks.map((item) => (
               <NavLink
-                key={item.href}
+                key={item.href || item.label}
                 href={item.href}
                 onClick={() => setMobileOpen(false)}
               >
@@ -296,6 +313,7 @@ function IconButton({ children, onClick, badge, badgeColor = "bg-[#1B5E20]" }) {
     <Tag
       type={onClick ? "button" : undefined}
       onClick={onClick}
+      suppressHydrationWarning
       className="relative flex h-10 w-10 items-center justify-center rounded-lg text-[#1a2e1a] transition hover:bg-[#E8F5E9]"
     >
       {children}

@@ -1,0 +1,116 @@
+@import "tailwindcss";
+
+/* ===============================
+   Arshi Naturals Theme
+================================ */
+:root {
+  --color-background: #FFF8E7;
+  --color-cream: #FFF8E7;
+  --color-text-primary: #1B5E20;
+  --color-primary: #1B5E20;
+  --color-primary-soft: #E8F5E9;
+  --color-accent: #4CAF50;
+  --color-gold: #D4AF37;
+  --color-reddish: #ef4343;
+  --color-yellowish: #f59f0a;
+  --color-black: #1a2e1a;
+  --color-paragraph: #5a6b5a;
+  --color-border: #e8e0d0;
+  --font-heading: var(--font-playfair);
+  --font-body: var(--font-noto-sans);
+}
+
+@theme inline {
+  --color-background: var(--color-background);
+  --color-cream: var(--color-cream);
+  --color-text-primary: var(--color-text-primary);
+  --color-primary: var(--color-primary);
+  --color-primary-soft: var(--color-primary-soft);
+  --color-accent: var(--color-accent);
+  --color-gold: var(--color-gold);
+  --color-reddish: var(--color-reddish);
+  --color-yellowish: var(--color-yellowish);
+  --color-black: var(--color-black);
+  --color-paragraph: var(--color-paragraph);
+}
+
+@layer base {
+  *,
+  ::before,
+  ::after {
+    border-color: var(--color-border);
+    box-sizing: border-box;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-heading), Georgia, serif;
+  }
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+html,
+body {
+  width: 100%;
+  min-height: 100%;
+  overflow-x: hidden;
+  background-color: var(--color-background);
+  color: var(--color-paragraph);
+  touch-action: pan-x pan-y;
+  -webkit-font-smoothing: antialiased;
+}
+
+* {
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+.scrollbar-hide {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.glass-card {
+  background: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+}
+
+.premium-shadow {
+  box-shadow: 0 4px 24px rgba(27, 94, 32, 0.08), 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+.premium-shadow-lg {
+  box-shadow: 0 8px 40px rgba(27, 94, 32, 0.12), 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.gradient-hero {
+  background: linear-gradient(135deg, #FFF8E7 0%, #E8F5E9 50%, #FFF8E7 100%);
+}
+
+.gradient-overlay {
+  background: linear-gradient(to top, rgba(27, 94, 32, 0.7) 0%, transparent 60%);
+}
+
+.skeleton {
+  background: linear-gradient(90deg, #f0ebe0 25%, #faf6ee 50%, #f0ebe0 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+.css-t3ipsp-control {
+  border-color: var(--color-border) !important;
+  box-shadow: none !important;
+}

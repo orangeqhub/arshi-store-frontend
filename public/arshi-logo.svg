@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 60" fill="none">
+  <circle cx="28" cy="30" r="24" fill="#1B5E20"/>
+  <path d="M28 14c-2 6-6 10-6 16 0 6 4 10 6 10s6-4 6-10c0-6-4-10-6-16z" fill="#4CAF50"/>
+  <path d="M20 32c4 2 8 2 16 0" stroke="#D4AF37" stroke-width="2" stroke-linecap="round"/>
+  <text x="58" y="28" font-family="Georgia, serif" font-size="18" font-weight="700" fill="#1B5E20">Arshi</text>
+  <text x="58" y="46" font-family="Georgia, serif" font-size="13" font-weight="400" fill="#4CAF50" letter-spacing="2">NATURALS</text>
+</svg>

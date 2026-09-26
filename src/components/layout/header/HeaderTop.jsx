@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import {
   Heart,
   ShoppingCart,
@@ -101,19 +102,19 @@ export default function Header() {
       <div className="hidden md:block border-t">
         <Container>
           <nav className="flex gap-10 h-14 items-center">
-            <a href="/" className="text-blue-600 font-medium">
+            <Link href="/" className="text-blue-600 font-medium">
               Home
-            </a>
+            </Link>
 
-            <a href="/shop">Shop</a>
+            <Link href="/shop">Shop</Link>
 
-            <a href="/categories">Categories</a>
+            <Link href="/categories">Categories</Link>
 
-            <a href="/about">About</a>
+            <Link href="/about">About</Link>
 
-           
 
-            <a href="/contact">Contact</a>
+
+            <Link href="/contact">Contact</Link>
           </nav>
         </Container>
       </div>

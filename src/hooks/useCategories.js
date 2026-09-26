@@ -13,10 +13,6 @@ export default function useCategories() {
   const [error, setError] =
     useState(null);
 
-  useEffect(() => {
-    fetchCategories();
-  }, []);
-
   const fetchCategories = async () => {
     try {
       setLoading(true);
@@ -33,6 +29,10 @@ export default function useCategories() {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    fetchCategories();
+  }, []);
 
   return {
     categories,
